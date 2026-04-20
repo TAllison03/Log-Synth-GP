@@ -4,14 +4,19 @@ This repository contains a tool that uses Boolean Difference math to find intern
 
 ## File Structure
 
+```text
 Lg-Synth-GP/
-|--- optimizer.cpp
-|--- optimizer.h
-|--- func.blif
-|--- impl_1.blif
-|--- abc/
-     |--- libabc.a
-     |--- src/
+├── abc/                    
+│   ├── src/               
+│   └── libabc.a            
+├── func.blif        
+├── impl_1.blif 
+├── .gitignore              
+├── Makefile               
+├── optimizer.cpp          
+├── optimizer.h            
+├── README.md              
+```
 
 ## Compilation Process
 
@@ -33,7 +38,7 @@ cd ..
 # Compile the optimizer
 make
 
-# Run teh optimizer
+# Run the optimizer
 ./optimizer
 
 # Clean any compiled files or temporary .blif files
@@ -43,7 +48,7 @@ make clean
 
 ## Additional Notes
 
-- Many of the key macros and functions for the optimizer were found as internal ABC functions, located in abc/src/aig/aig/aig.h
+- Many of the important functions for the optimizer were found as internal ABC functions, located in abc/src/aig/aig/aig.h
 - The .blif file used for optimization needs to be hardcoded in the current version. Simply change the string in optimizer.cpp, line 98
 - func.blif and impl_1.blif are just two very simple example files. They are just to test functionality, not robustness.
 
