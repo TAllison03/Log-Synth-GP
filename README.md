@@ -16,20 +16,20 @@ Lg-Synth-GP/
 ## Compilation Process
 
 ### Clone ABC Repo
-'''bash
+```bash
 git clone https://github.com/berkeley-abc/abc.git
-'''
+```
 
 ### Compile ABC Library
-'''bash
+```bash
 cd abc
 make libabc.a
 cd ..
-'''
+```
 
 ## Usage
 
-'''bash
+```bash
 # Compile the optimizer
 make
 
@@ -38,7 +38,7 @@ make
 
 # Clean any compiled files or temporary .blif files
 make clean
-'''
+```
 
 
 ## Additional Notes
