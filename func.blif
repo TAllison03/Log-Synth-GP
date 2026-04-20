@@ -1,0 +1,40 @@
+# Design for function f = abc + ab + ac
+
+.model func 
+.inputs a b c
+.outputs f
+
+# a AND b
+.names a b s0
+11 1
+
+# a AND b AND c
+.names c s0 s1 
+11 1
+
+# a AND b number 2
+.names a b s2
+11 1
+
+# a AND c
+.names a c s3
+11 1
+
+# abc OR ab 
+.names s1 s2 s4
+1- 1
+-1 1
+
+# abc OR ab OR ac 
+.names s3 s4 f
+1- 1
+-1 1
+
+# external dont cares example (ABC ignores this)
+.exdc
+.inputs a b c
+.outputs f
+.names a b c f
+0-- 1
+
+.end
