@@ -1,0 +1,13 @@
+# Ignore compiled executables and object files
+optimizer
+*.o
+
+# Ignore the massive ABC repository
+abc/
+
+# Ignore temporary files 
+temp_*.blif
+step_*.blif
+
+# Ignore OS system files
+.DS_Store
