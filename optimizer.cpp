@@ -147,6 +147,67 @@ int main(int argc, char *argv[])
     std::cout << "Miter Primary Outputs: " << Aig_ManCoNum(pMiterAig) << std::endl;
     std::cout << "Miter Total AND Gates: " << Aig_ManAndNum(pMiterAig) << std::endl;
 
+        // Code to take ODC and put it in exdc form
+    Abc_Obj_t* pPi;
+    int i;
+
+    // Loops over and gets all used variable names
+    Vec_Ptr_t* vPiNames = Vec_PtrAlloc(Aig_ManCiNum(pAig));
+
+    Abc_NtkForEachCi(pNtk, pPi, i) {
+        Vec_PtrPush(vPiNames, Abc_ObjName(pPi));
+    }
+
+    // Gets the output names for the file
+    Vec_Ptr_t* vPoNames = Vec_PtrAlloc(1);
+    Vec_PtrPush(vPoNames, (void*)"odc");
+
+    // Puts these names and the miter into a new blif
+    Aig_ManDumpBlif(pMiterAig, "odc_raw.blif", vPiNames, vPoNames);
+
+    // Code to add ODC to blif file
+    std::ifstream orig("func.blif");
+    std::ifstream odc("odc_raw.blif");
+    std::ofstream out("func_with_exdc.blif");
+
+    std::string line;
+
+    // Copy original blif file up to .end
+    while (std::getline(orig, line))
+    {
+        if (line == ".end")
+            break;
+
+        out << line << "\n";
+    }
+
+    // Start the exdc block
+    out << "\n.exdc\n";
+    out << ".inputs a b c\n";
+    out << ".outputs odc\n";
+
+
+    // Add the odc logic computed in this file
+    bool copy = false;
+
+    while (std::getline(odc, line))
+    {
+        // start copying after first .names
+        if (line.rfind(".names", 0) == 0)
+            copy = true;
+
+        // stop at end
+        if (line == ".end")
+            break;
+
+        // skip headers (.inputs/.outputs)
+        if (copy && line[0] != '.')
+            out << line << "\n";
+    }
+
+    // CLose the file
+    out << ".end\n";
+    
     // Cleanup
     Aig_ManStop(pMiterAig);
     Aig_ManStop(pAig);
