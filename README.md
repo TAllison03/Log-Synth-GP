@@ -59,7 +59,7 @@ cd ..
 make
 
 # Run the optimizer
-./optimizer
+./optimizer {your blif filepath}
 
 # Clean any compiled files or temporary .blif files
 make clean
@@ -69,7 +69,7 @@ make clean
 ## Additional Notes
 
 - Many of the important functions for the optimizer were found as internal ABC functions, located in abc/src/aig/aig/aig.h
-- The .blif file used for optimization needs to be hardcoded in the current version. Simply change the string in optimizer.cpp, line 98
 - func.blif and impl_1.blif are just two very simple example files. They are just to test functionality, not robustness.
+- The tests folder contains more test circuits you can run to try the program out.
 
 Check out the [Berkeley ABC Repository](https://github.com/berkeley-abc/abc) for more info.

@@ -54,12 +54,12 @@ Aig_Man_t* MakeOCDMiter(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire) {
 
         // Find pointers for 0 and 1 children for universe 0
         Aig_Obj_t* pChild0_0 = Aig_NotCond(map0[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
-        Aig_Obj_t* pChild1_0 = Aig_NotCond(map0[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
+        Aig_Obj_t* pChild1_0 = Aig_NotCond(map0[Aig_ObjFanin1(pObj)->Id], Aig_ObjFaninC1(pObj));
         map0[pObj->Id] = Aig_And(pMiterAig, pChild0_0, pChild1_0); // New AND gate
 
         // Find pointers for 0 and 1 children for universe 1
         Aig_Obj_t* pChild0_1 = Aig_NotCond(map1[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
-        Aig_Obj_t* pChild1_1 = Aig_NotCond(map1[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
+        Aig_Obj_t* pChild1_1 = Aig_NotCond(map1[Aig_ObjFanin1(pObj)->Id], Aig_ObjFaninC1(pObj));
         map1[pObj->Id] = Aig_And(pMiterAig, pChild0_1, pChild1_1); // New AND gate
     }
 
@@ -179,8 +179,12 @@ int main(int argc, char *argv[])
     }
 
     // Gets the output names for the file
-    Vec_Ptr_t* vPoNames = Vec_PtrAlloc(1);
-    Vec_PtrPush(vPoNames, (void*)"odc");
+    Vec_Ptr_t* vPoNames = Vec_PtrAlloc(Abc_NtkCoNum(pNtk));
+    Abc_Obj_t* pPo;
+    int j;
+    Abc_NtkForEachCo(pNtk, pPo, j) {
+        Vec_PtrPush(vPoNames, Abc_ObjName(pPo));
+    }
 
     // Puts these names and the miter into a new blif
     std::string raw = "temp/" + filename + "_raw.blif";
@@ -204,30 +208,23 @@ int main(int argc, char *argv[])
 
     // Start the exdc block
     out << "\n.exdc\n";
-    out << ".inputs a b c\n";
-    out << ".outputs odc\n";
+    // out << ".inputs a b c\n";
+    // out << ".outputs odc\n";
 
 
     // Add the odc logic computed in this file
-    bool copy = false;
-
     while (std::getline(odc, line))
     {
-        // start copying after first .names
-        if (line.rfind(".names", 0) == 0)
-            copy = true;
+        if (line.rfind(".model", 0) == 0) continue;
+        // if (line.rfind(".inputs", 0) == 0) continue;
+        // if (line.rfind(".outputs", 0) == 0) continue;
+        if (line.rfind("#", 0) == 0) continue;
 
-        // stop at end
-        if (line == ".end")
-            break;
-
-        // skip headers (.inputs/.outputs)
-        if (copy && line[0] != '.')
-            out << line << "\n";
+        out << line << "\n";
     }
 
     // Close the file
-    out << ".end\n";
+    // out << ".end\n";
     
     // Cleanup
     Aig_ManStop(pMiterAig);
