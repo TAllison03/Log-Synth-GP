@@ -26,4 +26,4 @@ $(TARGET): $(OBJS)
 # Cleanup
 clean:
 		rm -f $(OBJS) $(TARGET)
-		rm -f temp_*.blif step_*.blif
+		rm -f temp_*.blif step_*.blif temp/*

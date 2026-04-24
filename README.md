@@ -20,7 +20,12 @@ Lg-Synth-GP/
 
 ## Compilation Process
 
-### Clone ABC Repo
+### Essential build requirements
+```bash
+sudo apt update && sudo apt install build-essential
+```
+
+### Clone ABC Repo inside this project
 ```bash
 git clone https://github.com/berkeley-abc/abc.git
 ```

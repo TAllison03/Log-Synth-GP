@@ -100,6 +100,17 @@ int main(int argc, char *argv[])
     }
     std::string readCmd = std::string("read_blif ") + argv[1];
 
+    // Build output path
+    std::string inputPath = argv[1];
+    size_t lastSlash = inputPath.find_last_of("/\\");
+    std::string filename = (lastSlash == std::string::npos) ? inputPath : inputPath.substr(lastSlash + 1);
+
+    size_t dotPos = filename.find_last_of('.');
+    if (dotPos != std::string::npos)
+        filename = filename.substr(0, dotPos);
+
+    std::string outputPath = "outputs/" + filename + "_exdc.blif";
+
     Abc_Start();
     Abc_Frame_t* pAbc = Abc_FrameGetGlobalFrame();
 
@@ -172,12 +183,13 @@ int main(int argc, char *argv[])
     Vec_PtrPush(vPoNames, (void*)"odc");
 
     // Puts these names and the miter into a new blif
-    Aig_ManDumpBlif(pMiterAig, "odc_raw.blif", vPiNames, vPoNames);
+    std::string raw = "temp/" + filename + "_raw.blif";
+    Aig_ManDumpBlif(pMiterAig, const_cast<char*>(raw.c_str()), vPiNames, vPoNames);
 
     // Code to add ODC to blif file
     std::ifstream orig(argv[1]);
-    std::ifstream odc("odc_raw.blif");
-    std::ofstream out("func_with_exdc.blif");
+    std::ifstream odc(raw);
+    std::ofstream out(outputPath);
 
     std::string line;
 

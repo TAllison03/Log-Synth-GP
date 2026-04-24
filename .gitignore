@@ -5,6 +5,13 @@ optimizer
 # Ignore the massive ABC repository
 abc/
 
+# Ignore abc history
+abc.history
+
+# Ignore user generated files
+temp/
+outputs/
+
 # Ignore temporary files 
 temp_*.blif
 step_*.blif

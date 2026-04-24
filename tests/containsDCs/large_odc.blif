@@ -1,40 +1,7 @@
-# =============================================================
-# large_odc.blif
-# -------------------------------------------------------------
-# Inputs : sel0, sel1, en, a, b, c, d, e, f, g  (10 inputs)
-# Outputs: out0, out1, out2, out3               (4 outputs)
-# Nodes  : n_ab, n_cd, n_ef, n_ag              (4 internal)
-#
-# Logic:
-#   n_ab = a + b
-#   n_cd = c + d
-#   n_ef = e + f
-#   n_ag = a * g
-#
-#   out0 = sel0==1 ? n_ab : n_cd
-#   out1 = sel1==1 ? n_cd : n_ef
-#   out2 = en * n_ab
-#   out3 = en * n_ag
-#
-# ODC Analysis:
-#   n_ab fans out to out0 and out2:
-#     in out0: masked when sel0=0 (mux picks n_cd instead)
-#     in out2: masked when en=0   (AND gate blocks it)
-#     ODC(n_ab) = {sel0=0} AND {en=0} = {sel0=0, en=0}
-#
-#   n_cd fans out to out0 and out1:
-#     in out0: masked when sel0=1 (mux picks n_ab instead)
-#     in out1: masked when sel1=0 (mux picks n_ef instead)
-#     ODC(n_cd) = {sel0=1} AND {sel1=0} = {sel0=1, sel1=0}
-#
-#   n_ef fans out to out1 only:
-#     in out1: masked when sel1=1 (mux picks n_cd instead)
-#     ODC(n_ef) = {sel1=1}
-#
-#   n_ag fans out to out3 only:
-#     in out3: masked when en=0 (AND gate blocks it)
-#     ODC(n_ag) = {en=0}
-# =============================================================
+# out0 = sel0 == 1 ? (a + b) : (c + d)
+# out1 = sel1 == 1 ? (c + d) : (e + f)
+# out2 = en * (a + b)
+# out3 = en * (a * g)
 
 .model large_odc
 .inputs sel0 sel1 en a b c d e f g
