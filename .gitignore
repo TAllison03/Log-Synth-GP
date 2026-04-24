@@ -9,8 +9,12 @@ abc/
 abc.history
 
 # Ignore user generated files
-temp/
-outputs/
+temp/*
+outputs/*
+
+# Keep the folders themselves
+!temp/.gitkeep
+!outputs/.gitkeep
 
 # Ignore temporary files 
 temp_*.blif
