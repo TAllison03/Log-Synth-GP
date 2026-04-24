@@ -29,14 +29,14 @@
 # out0 = mux(sel0, n_ab, n_cd)
 # sel0=1 -> n_ab;  sel0=0 -> n_cd
 .names sel0 n_ab n_cd out0
-0 - 1 1
-1 1 - 1
+0-1 1
+11- 1
 
 # out1 = mux(sel1, n_cd, n_ef)
 # sel1=1 -> n_cd;  sel1=0 -> n_ef
 .names sel1 n_cd n_ef out1
-0 - 1 1
-1 1 - 1
+0-1 1
+11- 1
 
 # out2 = en AND n_ab
 .names en n_ab out2

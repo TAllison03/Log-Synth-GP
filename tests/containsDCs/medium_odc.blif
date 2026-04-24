@@ -18,8 +18,8 @@
 # f = mux(sel, n_ab, n_cd)
 # sel=0 -> f=n_cd;  sel=1 -> f=n_ab
 .names sel n_ab n_cd f
-0 - 1 1
-1 1 - 1
+0-1 1
+11- 1
 
 # g = e AND n_ab
 .names e n_ab g

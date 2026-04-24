@@ -90,9 +90,6 @@ Aig_Man_t* MakeOCDMiter(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire) {
 
 int main(int argc, char *argv[])
 {
-
-    // ===== Commands to Take in blif file =====
-
     // Check that blif was actually passed in and build command
     if (argc < 2) {
         std::cerr << "Usage: " << argv[0] << " <file.blif>" << std::endl;
@@ -187,6 +184,8 @@ int main(int argc, char *argv[])
     }
 
     // Puts these names and the miter into a new blif
+    // Clean up dangling nodes before dumping
+    Aig_ManCleanup(pMiterAig);
     std::string raw = "temp/" + filename + "_raw.blif";
     Aig_ManDumpBlif(pMiterAig, const_cast<char*>(raw.c_str()), vPiNames, vPoNames);
 
@@ -208,9 +207,6 @@ int main(int argc, char *argv[])
 
     // Start the exdc block
     out << "\n.exdc\n";
-    // out << ".inputs a b c\n";
-    // out << ".outputs odc\n";
-
 
     // Add the odc logic computed in this file
     while (std::getline(odc, line))
@@ -222,9 +218,6 @@ int main(int argc, char *argv[])
 
         out << line << "\n";
     }
-
-    // Close the file
-    // out << ".end\n";
     
     // Cleanup
     Aig_ManStop(pMiterAig);
