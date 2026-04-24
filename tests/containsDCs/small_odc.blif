@@ -1,0 +1,13 @@
+# f = a * b * c
+
+.model small_odc
+.inputs a b c
+.outputs f
+
+.names b c n_bc
+11 1
+
+.names a n_bc f
+11 1
+
+.end

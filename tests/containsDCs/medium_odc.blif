@@ -1,0 +1,28 @@
+# f = (sel * (a + b)) + (sel' * (c + d)) ***THIS IS A MUX***
+# g = e * (a + b)
+
+.model medium_odc
+.inputs sel a b c d e
+.outputs f g
+
+# n_ab = a OR b
+.names a b n_ab
+1- 1
+-1 1
+
+# n_cd = c OR d
+.names c d n_cd
+1- 1
+-1 1
+
+# f = mux(sel, n_ab, n_cd)
+# sel=0 -> f=n_cd;  sel=1 -> f=n_ab
+.names sel n_ab n_cd f
+0 - 1 1
+1 1 - 1
+
+# g = e AND n_ab
+.names e n_ab g
+11 1
+
+.end

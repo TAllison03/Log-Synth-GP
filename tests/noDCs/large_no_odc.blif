@@ -1,0 +1,67 @@
+# p0 = (a xor b) xor (c xor d) xor (i xor j)
+# p1 = (a xor b) xor (e xor f) xor (k xor l)
+# p2 = (c xor d) xor (e xor f)
+# p3 = (g xor h) xor (i xor j) xor (k xor l)
+
+.model large_no_odc
+.inputs a b c d e f g h i j k l
+.outputs p0 p1 p2 p3
+
+# xor pairs
+.names a b x_ab
+01 1
+10 1
+
+.names c d x_cd
+01 1
+10 1
+
+.names e f x_ef
+01 1
+10 1
+
+.names g h x_gh
+01 1
+10 1
+
+.names i j x_ij
+01 1
+10 1
+
+.names k l x_kl
+01 1
+10 1
+
+# p0 = x_ab xor x_cd xor x_ij
+.names x_ab x_cd x_abcd
+01 1
+10 1
+
+.names x_abcd x_ij p0
+01 1
+10 1
+
+# p1 = x_ab xor x_ef xor x_kl
+.names x_ab x_ef x_abef
+01 1
+10 1
+
+.names x_abef x_kl p1
+01 1
+10 1
+
+# p2 = x_cd xor x_ef
+.names x_cd x_ef p2
+01 1
+10 1
+
+# p3 = x_gh xor x_ij xor x_kl
+.names x_gh x_ij x_ghij
+01 1
+10 1
+
+.names x_ghij x_kl p3
+01 1
+10 1
+
+.end

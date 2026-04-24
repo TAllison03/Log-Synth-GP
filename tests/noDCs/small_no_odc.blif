@@ -1,0 +1,15 @@
+# f = a xor b xor c
+
+.model small_no_odc
+.inputs a b c
+.outputs f
+
+.names a b n_xab
+01 1
+10 1
+
+.names n_xab c f
+01 1
+10 1
+
+.end

@@ -91,11 +91,18 @@ int main(int argc, char *argv[])
 
     // ===== Commands to Take in blif file =====
 
+    // Check that blif was actually passed in and build command
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <file.blif>" << std::endl;
+        return 1;
+    }
+    std::string readCmd = std::string("read_blif ") + argv[1];
+
     Abc_Start();
     Abc_Frame_t* pAbc = Abc_FrameGetGlobalFrame();
 
     // Reads the selected .blif file
-    if (Cmd_CommandExecute(pAbc, "read_blif func.blif")) {
+    if (Cmd_CommandExecute(pAbc, readCmd.c_str())) {
         return 1;
     }
     //Cmd_CommandExecute(pAbc, "print_stats");
@@ -166,7 +173,7 @@ int main(int argc, char *argv[])
     Aig_ManDumpBlif(pMiterAig, "odc_raw.blif", vPiNames, vPoNames);
 
     // Code to add ODC to blif file
-    std::ifstream orig("func.blif");
+    std::ifstream orig(arg[1]);
     std::ifstream odc("odc_raw.blif");
     std::ofstream out("func_with_exdc.blif");
 

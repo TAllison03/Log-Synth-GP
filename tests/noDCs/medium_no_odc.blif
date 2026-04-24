@@ -1,0 +1,27 @@
+# f = a xor b xor c xor d xor e xor g
+
+.model medium_no_odc
+.inputs a b c d e g
+.outputs f
+
+.names a b x_ab
+01 1
+10 1
+
+.names c d x_cd
+01 1
+10 1
+
+.names e g x_eg
+01 1
+10 1
+
+.names x_ab x_cd x_abcd
+01 1
+10 1
+
+.names x_abcd x_eg f
+01 1
+10 1
+
+.end
