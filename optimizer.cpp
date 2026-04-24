@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <string>
+#include <fstream>
 
 extern "C"
 {
@@ -173,7 +175,7 @@ int main(int argc, char *argv[])
     Aig_ManDumpBlif(pMiterAig, "odc_raw.blif", vPiNames, vPoNames);
 
     // Code to add ODC to blif file
-    std::ifstream orig(arg[1]);
+    std::ifstream orig(argv[1]);
     std::ifstream odc("odc_raw.blif");
     std::ofstream out("func_with_exdc.blif");
 
