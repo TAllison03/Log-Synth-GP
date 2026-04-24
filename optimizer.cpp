@@ -226,7 +226,7 @@ int main(int argc, char *argv[])
             out << line << "\n";
     }
 
-    // CLose the file
+    // Close the file
     out << ".end\n";
     
     // Cleanup

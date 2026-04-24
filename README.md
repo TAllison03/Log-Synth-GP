@@ -9,6 +9,21 @@ Lg-Synth-GP/
 ├── abc/                    
 │   ├── src/               
 │   └── libabc.a            
+├── outputs/
+│   ├── ***Program Outputs***
+│   └── .gitkeep
+├── temp/
+│   ├── *Working Files*
+│   └── .gitkeep
+├── tests/                    
+│   ├── containsDCs/               
+│   │   ├── large_odc.blif  
+│   │   ├──medium_odc.blif 
+│   │   └── small_odc.blif
+│   └── noDCs/               
+│       ├── large_odc.blif  
+│       ├──medium_odc.blif 
+│       └── small_odc.blif
 ├── func.blif        
 ├── impl_1.blif 
 ├── .gitignore              
