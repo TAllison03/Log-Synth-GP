@@ -106,7 +106,7 @@ int main(int argc, char *argv[])
     if (dotPos != std::string::npos)
         filename = filename.substr(0, dotPos);
 
-    std::string outputPath = "outputs/" + filename + "_exdc.blif";
+    std::string outputPath = "temp/" + filename + "_exdc.blif";
 
     Abc_Start();
     Abc_Frame_t* pAbc = Abc_FrameGetGlobalFrame();
@@ -224,5 +224,19 @@ int main(int argc, char *argv[])
     Aig_ManStop(pAig);
     Abc_NtkDelete(pStrash);
     Abc_Stop();
+    out.close();
+    odc.close();
+
+    // Prompt user to run exdc through SIS and open SIS
+    std::cout << "\n===== ODC optimization complete =====" << std::endl;
+    std::cout << "Run the following in SIS to optimize:" << std::endl;
+    std::cout << "\n===================================" << std::endl;
+    std::cout << "  read_blif " << outputPath << std::endl;
+    std::cout << "  full_simplify" << std::endl;
+    std::cout << "  write_blif outputs/" << filename << "_optimized.blif" << std::endl;
+    std::cout << "  quit" << std::endl;
+    std::cout << "\nOpening SIS..." << std::endl;
+    system("./sis");
+
     return 0;
 }
