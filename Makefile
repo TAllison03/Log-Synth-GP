@@ -9,7 +9,7 @@ LIBS = ./abc/libabc.a -lm -ldl -lreadline -lpthread
 TARGET = optimizer
 
 # Source files
-SRCS = optimizer.cpp
+SRCS = main.cpp miter.cpp fileio.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 # Default target
@@ -20,10 +20,10 @@ $(TARGET): $(OBJS)
 		$(CXX) $(CXXFLAGS) -o $(TARGET) $(OBJS) $(LIBS)
 
 # Compile C++ source files (.cpp) into object (.o) files
-%.o: %.cpp optimizer.h
+%.o: %.cpp
 		$(CXX) $(CXXFLAGS) -c $< -o $@
 
 # Cleanup
 clean:
 		rm -f $(OBJS) $(TARGET)
-		rm -f temp_*.blif step_*.blif temp/*
+		rm -f temp/* outputs/*
