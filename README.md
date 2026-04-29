@@ -28,8 +28,12 @@ Lg-Synth-GP/
 ├── impl_1.blif 
 ├── .gitignore              
 ├── Makefile               
-├── optimizer.cpp          
-├── optimizer.h            
+├── fileio.cpp
+├── fileio.h
+├── main.cpp
+├── miter.cpp
+├── miter.h
+├── sis         
 ├── README.md              
 ```
 
