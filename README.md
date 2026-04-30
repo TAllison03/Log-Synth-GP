@@ -77,6 +77,8 @@ make
 make clean
 ```
 
+This implementation is not 100% correct
+
 ## Additional Notes
 
 - Many of the important functions for the optimizer were found as internal ABC functions, located in abc/src/aig/aig/aig.h
