@@ -12,7 +12,14 @@ Our final report is located in the folder FinalPaper
 Lg-Synth-GP/
 ├── abc/                    
 │   ├── src/               
-│   └── libabc.a            
+│   └── libabc.a
+├── FinalPaper/                    
+│   └── 5740 Final Paper.pdf
+├── ProjectProposal/                    
+│   └── 5740 Project Proposal.pdf
+├── abc/                    
+│   ├── src/               
+│   └── libabc.a              
 ├── outputs/
 │   ├── ***Program Outputs***
 │   └── .gitkeep
@@ -20,7 +27,8 @@ Lg-Synth-GP/
 │   ├── *Working Files*
 │   └── .gitkeep
 ├── tests/                    
-│   ├── containsDCs/               
+│   ├── containsDCs/
+│   │   ├── func.blif               
 │   │   ├── large_odc.blif  
 │   │   ├──medium_odc.blif 
 │   │   └── small_odc.blif
@@ -28,8 +36,6 @@ Lg-Synth-GP/
 │       ├── large_odc.blif  
 │       ├──medium_odc.blif 
 │       └── small_odc.blif
-├── func.blif        
-├── impl_1.blif 
 ├── .gitignore              
 ├── Makefile               
 ├── fileio.cpp
