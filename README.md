@@ -41,7 +41,7 @@ Lg-Synth-GP/
 ├── README.md              
 ```
 ## Branches
-There is a second branch titled experimental. If you want to see some of our test code, it is in that branch.
+There is a second branch titled experimental. If you want to see some of our test code, it is in that branch. All of our main code written by us is in the main branch
 
 ## Compilation Process
 
