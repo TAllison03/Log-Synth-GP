@@ -40,6 +40,8 @@ Lg-Synth-GP/
 ├── sis         
 ├── README.md              
 ```
+## Branches
+There is a second branch titled experimental. If you want to see some of our test code, it is in that branch.
 
 ## Compilation Process
 
