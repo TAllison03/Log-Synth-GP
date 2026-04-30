@@ -2,37 +2,64 @@
 #include <iostream>
 #include <fstream>
 
-void WriteExdcBlif(const std::string& origPath,
-                   const std::string& rawPath,
-                   const std::string& outputPath)
+void WriteLocalNodeExdcBlif(const std::string& rawPath,
+                            const std::string& outputPath,
+                            const std::string& modelName,
+                            const std::vector<std::string>& inputNames,
+                            const std::string& targetName,
+                            const std::string& targetOnCube,
+                            bool targetHasOneCube)
 {
-    std::ifstream orig(origPath);
     std::ifstream odc(rawPath);
     std::ofstream out(outputPath);
 
-    std::string line;
-
-    // Copy original blif file up to .end or .exdc
-    while (std::getline(orig, line))
-    {
-        if (line == ".end" || line == ".exdc")
-            break;
-        out << line << "\n";
+    if (!odc.is_open()) {
+        std::cerr << "Error: could not open raw ODC BLIF: "
+                  << rawPath << std::endl;
+        return;
     }
 
-    // Start the exdc block
+    if (!out.is_open()) {
+        std::cerr << "Error: could not create local EXDC BLIF: "
+                  << outputPath << std::endl;
+        return;
+    }
+
+    out << ".model " << modelName << "\n";
+
+    out << ".inputs";
+    for (const std::string& name : inputNames)
+        out << " " << name;
+    out << "\n";
+
+    out << ".outputs " << targetName << "\n\n";
+
+    // Original target-node implementation.
+    // For now this is one AIG AND node, so it is represented by one BLIF cube.
+    out << ".names";
+    for (const std::string& name : inputNames)
+        out << " " << name;
+    out << " " << targetName << "\n";
+
+    if (targetHasOneCube)
+        out << targetOnCube << " 1\n";
+
     out << "\n.exdc\n";
 
-    // Copy ODC logic from raw miter blif, skipping model/comment lines
+    std::string line;
+
+    // Copy raw ODC miter logic.
+    // It should already have matching .inputs and .outputs.
     while (std::getline(odc, line))
     {
         if (line.rfind(".model", 0) == 0) continue;
+        if (line.rfind(".end", 0) == 0) continue;
         if (line.rfind("#", 0) == 0) continue;
+
         out << line << "\n";
     }
 
-    out.close();
-    odc.close();
+    out << ".end\n";
 }
 
 void RunSIS(const std::string& outputPath, const std::string& filename)

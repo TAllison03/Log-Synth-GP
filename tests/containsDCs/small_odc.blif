@@ -1,13 +1,14 @@
-# f = a * b * c
+# f = ab + a
 
-.model small_odc
-.inputs a b c
+.model simple_odc
+.inputs a b
 .outputs f
 
-.names b c n_bc
+.names a b n
 11 1
 
-.names a n_bc f
-11 1
+.names n a f
+1- 1
+-1 1
 
 .end

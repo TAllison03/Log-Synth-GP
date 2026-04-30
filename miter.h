@@ -11,6 +11,10 @@ extern "C"
 }
 
 /*
-* Makes the miter on the target wire for the exdc
-*/
-Aig_Man_t* MakeOCDMiter(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire);
+ * Builds an ODC miter for a target wire using the provided local input set.
+ */
+Aig_Man_t* MakeOCDMiterWithInputs(
+    Aig_Man_t* pAig,
+    Aig_Obj_t* pTargetWire,
+    const std::vector<Aig_Obj_t*>& vMiterInputs
+);

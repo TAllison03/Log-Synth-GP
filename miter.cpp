@@ -1,6 +1,6 @@
 #include "miter.h"
 
-Aig_Man_t* MakeOCDMiter(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire) {
+Aig_Man_t* MakeOCDMiterWithInputs(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire, const std::vector<Aig_Obj_t*>& vMiterInputs) {
     
     // Make a new AIG to hold the Miter with plenty of space for universe 0 and 1
     Aig_Man_t* pMiterAig = Aig_ManStart(Aig_ManNodeNum(pAig) * 2);
@@ -18,14 +18,18 @@ Aig_Man_t* MakeOCDMiter(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire) {
     Aig_Obj_t* pObj;
     int i;
 
-    // Loop through all combinational inputs
-    Aig_ManForEachCi(pAig, pObj, i)
+    // Create miter inputs only for the selected fanins of the target wire
+    for (Aig_Obj_t* pInput : vMiterInputs)
     {
+        pInput = Aig_Regular(pInput);
+
+        if (map0[pInput->Id] != nullptr)
+            continue;
+
         Aig_Obj_t* pNewCi = Aig_ObjCreateCi(pMiterAig);
 
-        // Update maps and set new input pins
-        map0[pObj->Id] = pNewCi;
-        map1[pObj->Id] = pNewCi;
+        map0[pInput->Id] = pNewCi;
+        map1[pInput->Id] = pNewCi;
     }
 
     // Force target wire to 0 and 1 in each map
@@ -35,24 +39,40 @@ Aig_Man_t* MakeOCDMiter(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire) {
     // Loop through all AND gates
     Aig_ManForEachNode(pAig, pObj, i)
     {
-        // Skip target wire
-        if (pObj == pTargetWire)
+        // Skip target wire and any nodes already mapped as miter inputs
+        if (pObj == pTargetWire || map0[pObj->Id] != nullptr)
             continue;
 
-        // Find pointers for 0 and 1 children for universe 0
-        Aig_Obj_t* pChild0_0 = Aig_NotCond(map0[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
-        Aig_Obj_t* pChild1_0 = Aig_NotCond(map0[Aig_ObjFanin1(pObj)->Id], Aig_ObjFaninC1(pObj));
+        Aig_Obj_t* pFanin0 = Aig_ObjFanin0(pObj);
+        Aig_Obj_t* pFanin1 = Aig_ObjFanin1(pObj);
+
+        // If this node depends on something outside the target fanins,
+        // we cannot express it in this restricted miter.
+        if (map0[pFanin0->Id] == nullptr || map0[pFanin1->Id] == nullptr ||
+            map1[pFanin0->Id] == nullptr || map1[pFanin1->Id] == nullptr)
+            continue;
+
+        Aig_Obj_t* pChild0_0 = Aig_NotCond(map0[pFanin0->Id], Aig_ObjFaninC0(pObj));
+        Aig_Obj_t* pChild1_0 = Aig_NotCond(map0[pFanin1->Id], Aig_ObjFaninC1(pObj));
         map0[pObj->Id] = Aig_And(pMiterAig, pChild0_0, pChild1_0);
 
-        // Find pointers for 0 and 1 children for universe 1
-        Aig_Obj_t* pChild0_1 = Aig_NotCond(map1[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
-        Aig_Obj_t* pChild1_1 = Aig_NotCond(map1[Aig_ObjFanin1(pObj)->Id], Aig_ObjFaninC1(pObj));
+        Aig_Obj_t* pChild0_1 = Aig_NotCond(map1[pFanin0->Id], Aig_ObjFaninC0(pObj));
+        Aig_Obj_t* pChild1_1 = Aig_NotCond(map1[pFanin1->Id], Aig_ObjFaninC1(pObj));
         map1[pObj->Id] = Aig_And(pMiterAig, pChild0_1, pChild1_1);
     }
 
-    Aig_Obj_t* pCareSet = Aig_Not(Aig_ManConst1(pMiterAig)); // Set care set to 0
+    Aig_Obj_t* pCareSet = Aig_Not(Aig_ManConst1(pMiterAig)); // constant 0
+    bool sawRepresentableOutput = false;
+
     Aig_ManForEachCo(pAig, pObj, i)
     {
+        Aig_Obj_t* pFanin = Aig_ObjFanin0(pObj);
+
+        if (map0[pFanin->Id] == nullptr || map1[pFanin->Id] == nullptr)
+        continue;
+
+        sawRepresentableOutput = true;
+
         // Find memory addresses for final gates of universe 0 and 1
         Aig_Obj_t* pOut0 = Aig_NotCond(map0[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
         Aig_Obj_t* pOut1 = Aig_NotCond(map1[Aig_ObjFanin0(pObj)->Id], Aig_ObjFaninC0(pObj));
@@ -64,8 +84,12 @@ Aig_Man_t* MakeOCDMiter(Aig_Man_t* pAig, Aig_Obj_t* pTargetWire) {
         pCareSet = Aig_Or(pMiterAig, pCareSet, pMiterXor);
     }
 
-    // ODC is inverse of care set
-    Aig_Obj_t* pODC = Aig_Not(pCareSet);
+    // If nothing could be represented using only the target fanins,
+    // return constant 0 ODC, meaning "no don't-cares."
+    Aig_Obj_t* pODC = sawRepresentableOutput
+        ? Aig_Not(pCareSet)
+        : Aig_Not(Aig_ManConst1(pMiterAig));
+
     Aig_ObjCreateCo(pMiterAig, pODC);
 
     // Cleanup

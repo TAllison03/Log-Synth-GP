@@ -9,7 +9,7 @@ LIBS = ./abc/libabc.a -lm -ldl -lreadline -lpthread
 TARGET = optimizer
 
 # Source files
-SRCS = main.cpp miter.cpp fileio.cpp
+SRCS = main.cpp miter.cpp fileio.cpp target_info.cpp
 OBJS = $(SRCS:.cpp=.o)
 
 # Default target
