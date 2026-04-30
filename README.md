@@ -2,6 +2,10 @@
 
 This repository contains a tool that uses Boolean Difference math to find internal Observability Don't Cares (ODC) and optimize logic circuits.
 
+## Final Report
+
+Our final report is located in the folder FinalPaper
+
 ## File Structure
 
 ```text
@@ -88,7 +92,3 @@ This implementation is not 100% correct
 - We tried running SIS ourselves with a script, but we couldn't get it to work automatically. We felt printing the exact commands and opening SIS for the user was our best bet.
 
 Check out the [Berkeley ABC Repository](https://github.com/berkeley-abc/abc) for more info.
-
-## Final Report
-
-Our final report is located in the folder FinalPaper
